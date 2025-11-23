@@ -12,6 +12,8 @@ import com.flightapp.entities.Flights;
 import com.flightapp.entities.Passenger;
 import com.flightapp.repositories.BookingRepository;
 import com.flightapp.util.PnrGenerator;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -79,8 +81,13 @@ public class BookingService {
                             .map(saved -> saved.getPnr());
                 });
     }
+    
     public Mono<Booking> getByPnr(String pnr) {
         return bookingRepo.findById(pnr);
+    }
+    
+    public Flux<Booking> getHistory(String email) {
+        return bookingRepo.findByUserEmail(email);
     }
 }
 
