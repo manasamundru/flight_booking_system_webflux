@@ -25,8 +25,4 @@ public class FlightService {
 	public Flux<Flights> searchFlights(FlightSearchRequest req) {
         return flightrepo.findByFromPlaceAndToPlaceAndJourneyDate(req.getFromPlace(),req.getToPlace(),req.getJourneyDate());
     }
-	public Mono<Flights> getFlightById(String flightId) {
-		return flightrepo.findById(flightId)
-	            .switchIfEmpty(Mono.error(new RuntimeException("Flight not found: " + flightId)));
-	}
 }
