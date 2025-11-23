@@ -13,6 +13,7 @@ import com.flightapp.entities.Booking;
 
 import com.flightapp.services.BookingService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -36,5 +37,8 @@ public class BookingController {
     	return bookingService.getByPnr(pnr).map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     	}
-    	
+    @GetMapping("booking/history/{email}")
+    public Flux<Booking> getHistory(@PathVariable String email){
+    	return bookingService.getHistory(email);
     }
+  }
