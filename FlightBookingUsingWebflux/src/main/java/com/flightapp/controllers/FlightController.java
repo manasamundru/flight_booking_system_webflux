@@ -30,7 +30,4 @@ public class FlightController {
 	public Flux<Flights> searchFlights(@RequestBody FlightSearchRequest req) {
 	    return flightservice.searchFlights(req);
 	}
-	
-	
-
 }
