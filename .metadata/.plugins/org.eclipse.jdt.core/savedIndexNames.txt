@@ -61,7 +61,6 @@ INDEX VERSION 1.134+C:\Users\MANASA\OneDrive\Desktop\ChubbAssignment-2\.metadata
 1891300883.index
 1638908826.index
 2218493942.index
-562224226.index
 3899716236.index
 3626431956.index
 297315242.index

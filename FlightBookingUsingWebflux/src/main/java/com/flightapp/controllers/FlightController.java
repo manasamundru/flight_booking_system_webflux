@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.flightapp.dto.FlightSearchRequest;
 import com.flightapp.entities.Flights;
 import com.flightapp.services.FlightService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -24,5 +26,11 @@ public class FlightController {
 				 .map(id->ResponseEntity.status(HttpStatus.CREATED)
 				 .body(id));
 	}
+	@PostMapping("/search")
+	public Flux<Flights> searchFlights(@RequestBody FlightSearchRequest req) {
+	    return flightservice.searchFlights(req);
+	}
+	
+	
 
 }
