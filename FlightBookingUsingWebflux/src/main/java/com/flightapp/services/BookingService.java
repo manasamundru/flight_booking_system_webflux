@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.flightapp.dto.BookingRequest;
@@ -17,10 +16,12 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class BookingService {
-    @Autowired
-    private BookingRepository bookingRepo;
-    @Autowired
-    private FlightService flightService;
+    private final BookingRepository bookingRepo;
+    private final FlightService flightService;
+    public BookingService(BookingRepository bookingRepo,FlightService flightService) {
+    	this.bookingRepo = bookingRepo;
+    	this.flightService = flightService;
+    }
     public Mono<String> bookTicket(String flightId, BookingRequest req) {
 
         return flightService.getFlightById(flightId)

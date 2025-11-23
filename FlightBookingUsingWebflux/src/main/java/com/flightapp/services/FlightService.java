@@ -1,6 +1,5 @@
 package com.flightapp.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.flightapp.dto.FlightSearchRequest;
@@ -13,10 +12,12 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class FlightService {
-	@Autowired
-	private FlightRepository flightrepo;
-	@Autowired
-	private AirlineRepository airlineRepo;
+	private final FlightRepository flightrepo;
+	private final AirlineRepository airlineRepo;
+	public FlightService(FlightRepository flightrepo,AirlineRepository airlineRepo) {
+		this.airlineRepo = airlineRepo;
+		this.flightrepo = flightrepo;
+	}
 	public Mono<String> addInventory(Flights flight) {
 		return airlineRepo.findById(flight.getAirlineId())
 				.switchIfEmpty(Mono.error(new RuntimeException("Airline not found: " + flight.getAirlineId())))

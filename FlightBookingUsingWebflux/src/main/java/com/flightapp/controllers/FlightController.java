@@ -1,6 +1,4 @@
 package com.flightapp.controllers;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +16,10 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/flight")
 public class FlightController {
-	@Autowired
-	private FlightService flightservice;
+	private final FlightService flightservice;
+	public FlightController(FlightService flightservice) {
+		this.flightservice = flightservice;
+	}
 	@PostMapping("/airline/inventory")
 	public Mono<ResponseEntity<String>> addInventory(@RequestBody Flights flight){
 		 return flightservice.addInventory(flight)
