@@ -1,0 +1,7 @@
+spring.application.name=FlightBookingUsingWebflux
+
+
+spring.application.name=Ekart
+server.port = 8080
+
+spring.data.mongodb.uri=mongodb+srv://manasa:dbpassword@cluster0.toucoyf.mongodb.net/flightbooking_db

@@ -1,0 +1,27 @@
+package com.flightapp.entities;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "bookings")
+public class Booking {
+    @Id
+    private String pnr;
+    private String flightId;
+    private String airlineId;
+    private String userEmail;
+    private LocalDateTime bookingDateTime;
+    private int totalSeatsBooked;
+    private String mealType;
+    private String status; // BOOKED / CANCELLED
+    private String journeyDate;
+    private List<Passenger> passengers;
+    private double pricePaid;
+}

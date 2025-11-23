@@ -1,0 +1,39 @@
+package com.flightapp.entities;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
+@Document(collection = "flight_inventory")
+@Data
+@Builder 
+@NoArgsConstructor 
+@AllArgsConstructor
+public class Flights {
+
+    @Id
+    private String id;
+
+    private String airlineId;
+
+    private String fromPlace;
+    private String toPlace;
+
+    private LocalDate journeyDate;
+
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
+
+    private boolean roundTripAvailable;
+
+    private double priceOneWay;
+    private double priceRoundTrip;
+
+    private int totalSeats;
+    private int availableSeats;
+
+    private String[] mealOptions;
+}
+
+
