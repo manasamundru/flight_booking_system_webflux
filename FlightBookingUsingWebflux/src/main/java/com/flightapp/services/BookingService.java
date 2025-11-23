@@ -79,5 +79,8 @@ public class BookingService {
                             .map(saved -> saved.getPnr());
                 });
     }
+    public Mono<Booking> getByPnr(String pnr) {
+        return bookingRepo.findById(pnr);
+    }
 }
 
