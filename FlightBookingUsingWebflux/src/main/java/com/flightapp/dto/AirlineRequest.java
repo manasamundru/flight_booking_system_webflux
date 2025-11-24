@@ -7,8 +7,8 @@ import lombok.Data;
 public class AirlineRequest {
 	@NotNull
 	@NotBlank
-    private String AirlineRequestId;
+    private String airlineRequestId;
 	@NotNull
 	@NotBlank
-    private String AirlineRequestName;
+    private String airlineRequestName;
 }
