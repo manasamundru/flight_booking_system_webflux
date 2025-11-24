@@ -24,7 +24,7 @@ public class AirlineController {
 
 	@PostMapping()
 	public Mono<ResponseEntity<String>> addAirline(@RequestBody AirlineRequest request) {
-		Airline airline = Airline.builder().id(request.getId()).name(request.getName()).build();
+		Airline airline = Airline.builder().id(request.getAirlineRequestId()).name(request.getAirlineRequestName()).build();
 		return airlineService.save(airline).map(id -> ResponseEntity.status(HttpStatus.CREATED).body(id));
 	}
 

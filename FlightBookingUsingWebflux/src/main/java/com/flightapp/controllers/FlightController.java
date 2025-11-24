@@ -27,14 +27,19 @@ public class FlightController {
 
 	@PostMapping("/airline/inventory")
 	public Mono<ResponseEntity<String>> addInventory(@RequestBody @Valid FlightsRequest request) {
-		Flights flight = Flights.builder().airlineId(request.getAirlineId()).fromPlace(request.getFromPlace())
-				.toPlace(request.getToPlace()).journeyDate(request.getJourneyDate())
-				.departureTime(request.getDepartureTime()).arrivalTime(request.getArrivalTime())
-				.roundTripAvailable(request.isRoundTripAvailable()).priceOneWay(request.getPriceOneWay())
-				.priceRoundTrip(request.getPriceRoundTrip()).totalSeats(request.getTotalSeats())
-				.mealOptions(request.getMealOptions()).availableSeats(request.getTotalSeats()).build();
+		Flights flight = Flights.builder().airlineId(request.getFlightsRequestAirlineId())
+				.fromPlace(request.getFlightsRequestFromPlace()).toPlace(request.getFlightsRequestToPlace())
+				.journeyDate(request.getFlightsRequestJourneyDate())
+				.departureTime(request.getFlightsRequestDepartureTime())
+				.arrivalTime(request.getFlightsRequestArrivalTime())
+				.roundTripAvailable(request.isFlightsRequestRoundTripAvailable())
+				.priceOneWay(request.getFlightsRequestPriceOneWay())
+				.priceRoundTrip(request.getFlightsRequestPriceRoundTrip())
+				.totalSeats(request.getFlightsRequestTotalSeats()).mealOptions(request.getFlightsRequestMealOptions())
+				.availableSeats(request.getFlightsRequestTotalSeats()).build();
 		return flightservice.addInventory(flight).map(id -> ResponseEntity.status(HttpStatus.CREATED).body(id));
 	}
+
 	@PostMapping("/search")
 	public Flux<Flights> searchFlights(@RequestBody @Valid FlightSearchRequest req) {
 		return flightservice.searchFlights(req);

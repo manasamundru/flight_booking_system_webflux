@@ -1,11 +1,14 @@
 package com.flightapp.dto;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class AirlineRequest {
-    private String id;
 	@NotNull
+	@NotBlank
+    private String AirlineRequestId;
 	@NotNull
-    private String name;
+	@NotBlank
+    private String AirlineRequestName;
 }

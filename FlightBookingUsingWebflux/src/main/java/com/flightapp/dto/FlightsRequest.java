@@ -11,23 +11,23 @@ import lombok.Data;
 public class FlightsRequest {
 	@NotNull
 	@NotBlank
-	private String id;
+	private String FlightsRequestId;
 	@NotNull
 	@NotBlank
-    private String airlineId;
+    private String FlightsRequestAirlineId;
 	@NotNull
 	@NotBlank
-    private String fromPlace;
+    private String FlightsRequestFromPlace;
 	@NotNull
 	@NotBlank
-    private String toPlace;
-    private LocalDate journeyDate;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
-    private boolean roundTripAvailable;
-    private double priceOneWay;
-    private double priceRoundTrip;
-    private int totalSeats;
-    private String[] mealOptions;
+    private String FlightsRequestToPlace;
+    private LocalDate FlightsRequestJourneyDate;
+    private LocalTime FlightsRequestDepartureTime;
+    private LocalTime FlightsRequestArrivalTime;
+    private boolean FlightsRequestRoundTripAvailable;
+    private double FlightsRequestPriceOneWay;
+    private double FlightsRequestPriceRoundTrip;
+    private int FlightsRequestTotalSeats;
+    private String[] FlightsRequestMealOptions;
 }
 
