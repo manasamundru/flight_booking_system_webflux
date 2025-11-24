@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.flightapp.dto.AirlineRequest;
 import com.flightapp.entities.Airline;
 import com.flightapp.services.AirlineService;
 
@@ -15,16 +16,16 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/airline")
 public class AirlineController {
-     private final AirlineService airlineService;
-     public AirlineController(AirlineService airlineService) {
-    	 this.airlineService = airlineService;
-     }
-     @PostMapping()
-     public Mono<ResponseEntity<String>> addAirline(@RequestBody Airline airline) {
-         return airlineService.save(airline)
-                 .map(id -> ResponseEntity
-                         .status(HttpStatus.CREATED)
-                         .body(id));
-     }
+	private final AirlineService airlineService;
+
+	public AirlineController(AirlineService airlineService) {
+		this.airlineService = airlineService;
+	}
+
+	@PostMapping()
+	public Mono<ResponseEntity<String>> addAirline(@RequestBody AirlineRequest request) {
+		Airline airline = Airline.builder().id(request.getId()).name(request.getName()).build();
+		return airlineService.save(airline).map(id -> ResponseEntity.status(HttpStatus.CREATED).body(id));
+	}
 
 }

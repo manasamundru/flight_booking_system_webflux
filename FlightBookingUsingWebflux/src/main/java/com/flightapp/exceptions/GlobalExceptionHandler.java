@@ -36,8 +36,7 @@ public class GlobalExceptionHandler {
 	public Map<String, String> handlerException(MethodArgumentNotValidException exception) {
 		Map<String, String> errorMap = new HashMap<>();
 		List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
-		errorList.forEach((error) -> {
-			;
+		errorList.forEach(error -> {
 			String fieldName = ((FieldError) error).getField();
 			String message = error.getDefaultMessage();
 			errorMap.put(fieldName, message);

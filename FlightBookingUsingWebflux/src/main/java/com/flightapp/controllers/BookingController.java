@@ -14,6 +14,7 @@ import com.flightapp.entities.Booking;
 
 import com.flightapp.services.BookingService;
 
+import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +29,7 @@ public class BookingController {
     @PostMapping("/booking/{flightId}")
     public Mono<ResponseEntity<String>> bookTicket(
             @PathVariable String flightId,
-            @RequestBody BookingRequest request) {
+            @RequestBody @Valid BookingRequest request) {
 
         return bookingService.bookTicket(flightId, request)
                 .map(pnr -> ResponseEntity.status(HttpStatus.CREATED).body(pnr));
