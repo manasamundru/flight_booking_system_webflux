@@ -27,10 +27,10 @@ public class GlobalExceptionHandler {
 		return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()));
 	}
 
-	@ExceptionHandler(RuntimeException.class)
-	public Mono<ResponseEntity<String>> handleRuntime(RuntimeException ex) {
-		return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()));
-	}
+//	@ExceptionHandler(RuntimeException.class)
+//	public Mono<ResponseEntity<String>> handleRuntime(RuntimeException ex) {
+//		return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()));
+//	}
 
 	@ExceptionHandler(exception = Exception.class)
 	public Map<String, String> handlerException(MethodArgumentNotValidException exception) {

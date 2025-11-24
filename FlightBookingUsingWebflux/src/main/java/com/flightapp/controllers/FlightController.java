@@ -27,9 +27,9 @@ public class FlightController {
 
 	@PostMapping("/airline/inventory")
 	public Mono<ResponseEntity<String>> addInventory(@RequestBody @Valid FlightsRequest request) {
-		Flights flight = Flights.builder().airlineId(request.getFlightsRequestAirlineId())
-				.fromPlace(request.getFlightsRequestFromPlace()).toPlace(request.getFlightsRequestToPlace())
-				.journeyDate(request.getFlightsRequestJourneyDate())
+		Flights flight = Flights.builder().id(request.getFlightsRequestId())
+				.airlineId(request.getFlightsRequestAirlineId()).fromPlace(request.getFlightsRequestFromPlace())
+				.toPlace(request.getFlightsRequestToPlace()).journeyDate(request.getFlightsRequestJourneyDate())
 				.departureTime(request.getFlightsRequestDepartureTime())
 				.arrivalTime(request.getFlightsRequestArrivalTime())
 				.roundTripAvailable(request.isFlightsRequestRoundTripAvailable())
@@ -37,7 +37,8 @@ public class FlightController {
 				.priceRoundTrip(request.getFlightsRequestPriceRoundTrip())
 				.totalSeats(request.getFlightsRequestTotalSeats()).mealOptions(request.getFlightsRequestMealOptions())
 				.availableSeats(request.getFlightsRequestTotalSeats()).build();
-		return flightservice.addInventory(flight).map(id -> ResponseEntity.status(HttpStatus.CREATED).body(id));
+		return flightservice.addInventory(flight)
+				.map(id -> ResponseEntity.status(HttpStatus.CREATED).body(request.getFlightsRequestId()));
 	}
 
 	@PostMapping("/search")
