@@ -1,6 +1,7 @@
 package com.flightapp.services;
 
 import com.flightapp.dto.BookingRequest;
+import com.flightapp.dto.FlightSearchRequest;
 import com.flightapp.entities.Booking;
 import com.flightapp.entities.Flights;
 import com.flightapp.entities.Passenger;
@@ -52,5 +53,14 @@ class BookingServiceTest {
 		Mockito.when(bookingRepo.save(Mockito.any())).thenReturn(Mono.just(saved));
 		StepVerifier.create(bookingService.bookTicket("F101", request)).expectNext("P123").verifyComplete();
 	}
+
+	@Test
+	void bookTicket_duplicateSeats() {
+		request.setPassengers(Arrays.asList(new Passenger("A", "F", 22, "1A"), new Passenger("B", "M", 25, "1A")));
+		Mockito.when(flightService.getFlightById("F101")).thenReturn(Mono.just(flight));
+		StepVerifier.create(bookingService.bookTicket("F101", request)).expectError(IllegalArgumentException.class)
+				.verify();
+	}
+	
 
 }
