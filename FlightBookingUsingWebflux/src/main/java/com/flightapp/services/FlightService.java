@@ -15,42 +15,49 @@ import reactor.core.publisher.Mono;
 public class FlightService {
 	private final FlightRepository flightrepo;
 	private final AirlineRepository airlineRepo;
-	public FlightService(FlightRepository flightrepo,AirlineRepository airlineRepo) {
+
+	public FlightService(FlightRepository flightrepo, AirlineRepository airlineRepo) {
 		this.airlineRepo = airlineRepo;
 		this.flightrepo = flightrepo;
 	}
+
 	public Mono<String> addInventory(Flights flight) {
 		return airlineRepo.findById(flight.getAirlineId())
 				.switchIfEmpty(Mono.error(new ResourceNotFoundException("Airline not found: " + flight.getAirlineId())))
 				.flatMap(a -> flightrepo.save(flight)).map(saved -> saved.getId());
 	}
+
 	public Flux<Flights> searchFlights(FlightSearchRequest req) {
-        return flightrepo.findByFromPlaceAndToPlaceAndJourneyDate(req.getFromPlace(),req.getToPlace(),req.getJourneyDate())
-        		.switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found with given request")));
-    }
-	public Mono<Flights> getFlightById(String flightId) {
-	    return flightrepo.findById(flightId)
-	            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found: " + flightId)));
+		return flightrepo
+				.findByFromPlaceAndToPlaceAndJourneyDate(req.getFromPlace(), req.getToPlace(), req.getJourneyDate())
+				.switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found with given request")));
 	}
+
+	public Mono<Flights> getFlightById(String flightId) {
+		return flightrepo.findById(flightId)
+				.switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found: " + flightId)));
+	}
+
 	public Mono<Flights> decrementSeats(String flightId, int seatsToBook) {
 
-        return getFlightById(flightId).flatMap(flight -> {
-            if (flight.getAvailableSeats() < seatsToBook) {
-                return Mono.error(new RuntimeException("Not enough seats available"));
-            }
-            flight.setAvailableSeats(flight.getAvailableSeats() - seatsToBook);
-            return flightrepo.save(flight);
-        });
-    }
+		return getFlightById(flightId).flatMap(flight -> {
+			if (flight.getAvailableSeats() < seatsToBook) {
+				return Mono.error(new RuntimeException("Not enough seats available"));
+			}
+			flight.setAvailableSeats(flight.getAvailableSeats() - seatsToBook);
+			return flightrepo.save(flight);
+		});
+	}
+
 	public Mono<Flights> incrementSeats(String flightId, int seatsToAdd) {
 
-        return getFlightById(flightId).flatMap(flight -> {
-            flight.setAvailableSeats(flight.getAvailableSeats() + seatsToAdd);
-            if (flight.getAvailableSeats() > flight.getTotalSeats()) {
-                flight.setAvailableSeats(flight.getTotalSeats());
-            }
-            return flightrepo.save(flight);
-        });
-    }
+		return getFlightById(flightId).flatMap(flight -> {
+			flight.setAvailableSeats(flight.getAvailableSeats() + seatsToAdd);
+			if (flight.getAvailableSeats() > flight.getTotalSeats()) {
+				flight.setAvailableSeats(flight.getTotalSeats());
+			}
+			return flightrepo.save(flight);
+		});
+	}
 
 }
