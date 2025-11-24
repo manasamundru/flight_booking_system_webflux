@@ -2,6 +2,7 @@ package com.flightapp.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +41,10 @@ public class BookingController {
     @GetMapping("booking/history/{email}")
     public Flux<Booking> getHistory(@PathVariable String email){
     	return bookingService.getHistory(email);
+    }
+    @DeleteMapping("/booking/cancel/{pnr}")
+    public Mono<ResponseEntity<String>> cancel(@PathVariable String pnr) {
+        return bookingService.cancelBooking(pnr)
+                .thenReturn(ResponseEntity.ok(""));
     }
   }
