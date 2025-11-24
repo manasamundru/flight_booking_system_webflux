@@ -10,6 +10,7 @@ import com.flightapp.dto.BookingRequest;
 import com.flightapp.entities.Booking;
 import com.flightapp.entities.Flights;
 import com.flightapp.entities.Passenger;
+import com.flightapp.exceptions.ResourceNotFoundException;
 import com.flightapp.repositories.BookingRepository;
 import com.flightapp.util.PnrGenerator;
 
@@ -27,7 +28,7 @@ public class BookingService {
     public Mono<String> bookTicket(String flightId, BookingRequest req) {
 
         return flightService.getFlightById(flightId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Flight not found")))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found")))
                 .flatMap(flight -> validateAndCreateBooking(flight, req));
     }
 
@@ -83,16 +84,18 @@ public class BookingService {
     }
     
     public Mono<Booking> getByPnr(String pnr) {
-        return bookingRepo.findById(pnr);
+        return bookingRepo.findById(pnr).
+        		switchIfEmpty(Mono.error(new ResourceNotFoundException("ticket not found with pnr " + pnr)));
     }
     
     public Flux<Booking> getHistory(String email) {
-        return bookingRepo.findByUserEmail(email);
+        return bookingRepo.findByUserEmail(email)
+        		.switchIfEmpty(Mono.error(new ResourceNotFoundException("user not found with email " + email)));
     }
     
     public Mono<Void> cancelBooking(String pnr) {
         return bookingRepo.findById(pnr)
-                .switchIfEmpty(Mono.error(new RuntimeException("Booking not found")))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Booking not found with pnr "+pnr)))
                 .flatMap(b ->bookingRepo.delete(b)
                              .then(flightService.incrementSeats(b.getFlightId(), b.getTotalSeatsBooked()))
                         ).then();

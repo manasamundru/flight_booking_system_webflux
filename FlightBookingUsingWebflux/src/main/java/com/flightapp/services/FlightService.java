@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.flightapp.dto.FlightSearchRequest;
 import com.flightapp.entities.Flights;
+import com.flightapp.exceptions.ResourceNotFoundException;
 import com.flightapp.repositories.AirlineRepository;
 import com.flightapp.repositories.FlightRepository;
 
@@ -20,15 +21,16 @@ public class FlightService {
 	}
 	public Mono<String> addInventory(Flights flight) {
 		return airlineRepo.findById(flight.getAirlineId())
-				.switchIfEmpty(Mono.error(new RuntimeException("Airline not found: " + flight.getAirlineId())))
+				.switchIfEmpty(Mono.error(new ResourceNotFoundException("Airline not found: " + flight.getAirlineId())))
 				.flatMap(a -> flightrepo.save(flight)).map(saved -> saved.getId());
 	}
 	public Flux<Flights> searchFlights(FlightSearchRequest req) {
-        return flightrepo.findByFromPlaceAndToPlaceAndJourneyDate(req.getFromPlace(),req.getToPlace(),req.getJourneyDate());
+        return flightrepo.findByFromPlaceAndToPlaceAndJourneyDate(req.getFromPlace(),req.getToPlace(),req.getJourneyDate())
+        		.switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found with given request")));
     }
 	public Mono<Flights> getFlightById(String flightId) {
 	    return flightrepo.findById(flightId)
-	            .switchIfEmpty(Mono.error(new RuntimeException("Flight not found: " + flightId)));
+	            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Flight not found: " + flightId)));
 	}
 	public Mono<Flights> decrementSeats(String flightId, int seatsToBook) {
 
