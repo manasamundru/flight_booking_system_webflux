@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 		return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()));
 	}
 
-	@ExceptionHandler(exception = Exception.class)
+	@ExceptionHandler(value = Exception.class)
 	public Map<String, String> handlerException(MethodArgumentNotValidException exception) {
 		Map<String, String> errorMap = new HashMap<>();
 		List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
