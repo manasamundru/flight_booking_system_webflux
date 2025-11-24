@@ -1,10 +1,10 @@
 package com.flightapp.services;
 
 import com.flightapp.dto.BookingRequest;
-import com.flightapp.dto.FlightSearchRequest;
 import com.flightapp.entities.Booking;
 import com.flightapp.entities.Flights;
 import com.flightapp.entities.Passenger;
+import com.flightapp.exceptions.ResourceNotFoundException;
 import com.flightapp.repositories.BookingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +61,54 @@ class BookingServiceTest {
 		StepVerifier.create(bookingService.bookTicket("F101", request)).expectError(IllegalArgumentException.class)
 				.verify();
 	}
-	
 
+	@Test
+	void bookTicket_seatAlreadyBooked() {
+		Mockito.when(flightService.getFlightById("F101")).thenReturn(Mono.just(flight));
+		Booking existing = new Booking();
+		existing.setPassengers(Arrays.asList(new Passenger("X", "M", 30, "1A")));
+		Mockito.when(bookingRepo.findByFlightId("F101")).thenReturn(Flux.just(existing));
+		StepVerifier.create(bookingService.bookTicket("F101", request)).expectError(RuntimeException.class).verify();
+	}
+
+	@Test
+	void getByPnr_found() {
+		Booking b = new Booking();
+		b.setPnr("P123");
+
+		Mockito.when(bookingRepo.findById("P123")).thenReturn(Mono.just(b));
+
+		StepVerifier.create(bookingService.getByPnr("P123")).expectNext(b).verifyComplete();
+	}
+	@Test
+	void getByPnr_notFound() {
+		Mockito.when(bookingRepo.findById("P123")).thenReturn(Mono.empty());
+		StepVerifier.create(bookingService.getByPnr("P123")).expectError(ResourceNotFoundException.class).verify();
+	}
+
+	@Test
+	void getHistory_notFound() {
+		Mockito.when(bookingRepo.findByUserEmail("abc@mail.com")).thenReturn(Flux.empty());
+		StepVerifier.create(bookingService.getHistory("abc@mail.com")).expectError(ResourceNotFoundException.class).verify();
+	}
+
+	@Test
+	void cancelBooking_success() {
+		Booking b = new Booking();
+		b.setPnr("P123");
+		b.setFlightId("F101");
+		b.setTotalSeatsBooked(2);
+		Mockito.when(bookingRepo.findById("P123")).thenReturn(Mono.just(b));
+		Mockito.when(bookingRepo.delete(b)).thenReturn(Mono.empty());
+		Mockito.when(flightService.incrementSeats("F101", 2)).thenReturn(Mono.just(flight));
+		StepVerifier.create(bookingService.cancelBooking("P123")).verifyComplete();
+	}
+
+    @Test
+    void cancelBooking_notFound() {
+        Mockito.when(bookingRepo.findById("P123")).thenReturn(Mono.empty());
+        StepVerifier.create(bookingService.cancelBooking("P123"))
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+    }
 }
