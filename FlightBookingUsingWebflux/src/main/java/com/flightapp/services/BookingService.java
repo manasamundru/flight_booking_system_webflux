@@ -89,5 +89,13 @@ public class BookingService {
     public Flux<Booking> getHistory(String email) {
         return bookingRepo.findByUserEmail(email);
     }
+    
+    public Mono<Void> cancelBooking(String pnr) {
+        return bookingRepo.findById(pnr)
+                .switchIfEmpty(Mono.error(new RuntimeException("Booking not found")))
+                .flatMap(b ->bookingRepo.delete(b)
+                             .then(flightService.incrementSeats(b.getFlightId(), b.getTotalSeatsBooked()))
+                        ).then();
+    }
 }
 
